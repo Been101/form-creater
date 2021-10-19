@@ -1,91 +1,87 @@
+<!--
+ * @Author: laibin.zheng
+ * @Date: 2021-10-19 09:41:33
+ * @LastEditTime: 2021-10-19 13:35:30
+ * @LastEditors: laibin.zheng
+ * @Description: 
+ * @FilePath: \form-creater\src\App.vue
+ * 
+-->
 <template>
-  <div calss="wrap" style="height: 100%; background: #f0f2f5; padding: 20px">
-    <div class="formCreater" style="height: 100%; overflow: auto">
+  <div calss="wrap"
+    style="height: 100%; background: #f0f2f5; padding: 20px">
+    <div class="formCreater"
+      style="height: 100%; overflow: auto">
       <div class="addForm">
-        <el-form
-          :label-width="'100px'"
+        <el-form :label-width="'100px'"
           style="padding: 20px; border: 1px solid #ddd"
           ref="addForm"
           :model="addForm"
-          :inline="true"
-        >
+          :inline="true">
           <el-form-item label="表单分类">
-            <dict-select
+            <!-- <dict-select
               v-model="addForm.type"
               aria-placeholder=""
               style="width: 217px"
               dict-code="bdlx"
-            ></dict-select>
+            ></dict-select> -->
           </el-form-item>
           <el-form-item label="表单功能">
-            <dict-select
+            <!-- <dict-select
               v-model="addForm.functionType"
               aria-placeholder=""
               style="width: 217px"
               dict-code="bdgn"
-            ></dict-select>
+            ></dict-select> -->
           </el-form-item>
           <el-form-item label="表单名称">
-            <el-input v-model="addForm.name" style="width: 217px"></el-input>
+            <el-input v-model="addForm.name"
+              style="width: 217px"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <div style="display: flex">
         <div style="flex: 1; background: #fff; margin: 20px 20px 0 0">
-          <el-form
-            :label-width="'100px'"
+          <el-form :label-width="'100px'"
             class="b-a"
             :label-position="'top'"
-            :disabled="true"
-          >
-            <draggable
-              :clone="cloneData"
+            :disabled="true">
+            <draggable :clone="cloneData"
               :list="form_list"
-              :options="dragOptions1"
-            >
-              <transition-group
-                class="form-list-group"
+              :options="dragOptions1">
+              <transition-group class="form-list-group"
                 type="transition"
                 :name="'flip-list'"
-                tag="div"
-              >
-                <renders
-                  v-for="(element, index) in form_list"
+                tag="div">
+                <renders v-for="(element, index) in form_list"
                   :key="index"
                   :ele="element.ele"
-                  :obj="element.obj || {}"
-                ></renders>
+                  :obj="element.obj || {}"></renders>
               </transition-group>
             </draggable>
           </el-form>
         </div>
         <div style="flex: 1; background: #fff; margin-top: 20px">
-          <el-form
-            ref="formValidate"
+          <el-form ref="formValidate"
             class="b-a"
             :label-width="'100px'"
             :model="formData"
             @submit.native.prevent
             :label-position="'top'"
             :disabled="true"
-            style="padding-bottom: 76px"
-          >
-            <el-alert
-              title="警告提示的文案"
+            style="padding-bottom: 76px">
+            <el-alert title="警告提示的文案"
               type="warning"
               description="未绑定数据字典控件无效"
-              show-icon
-            >
+              show-icon>
             </el-alert>
-            <draggable :list="sortable_item" :options="dragOptions2">
-              <transition-group
-                class="form-list-group"
+            <draggable :list="sortable_item"
+              :options="dragOptions2">
+              <transition-group class="form-list-group"
                 type="transition"
                 :name="'flip-list'"
-                tag="div"
-              >
-                <renders
-                  @handleRemoveEle="removeEle"
+                tag="div">
+                <renders @handleRemoveEle="removeEle"
                   @handleConfEle="confEle"
                   @changeVisibility="changeVisibility"
                   v-for="(element, index) in sortable_item"
@@ -96,80 +92,60 @@
                   :data="formData"
                   @handleChangeVal="(val) => handleChangeVal(val, element)"
                   :sortableItem="sortable_item"
-                  :config-icon="true"
-                >
+                  :config-icon="true">
                 </renders>
               </transition-group>
             </draggable>
           </el-form>
           <div style="margin: -56px 0 0 20px">
-            <el-button type="primary" v-if="id === '0'" @click="handleSubmit()"
-              >新建表单</el-button
-            >
-            <el-button type="primary" v-else @click="handleSubmit()"
-              >完成编辑</el-button
-            >
-            <el-button
-              type="ghost"
+            <el-button type="primary"
+              v-if="id === '0'"
+              @click="handleSubmit()">新建表单</el-button>
+            <el-button type="primary"
+              v-else
+              @click="handleSubmit()">完成编辑</el-button>
+            <el-button type="ghost"
               @click="handleReset()"
-              style="margin-left: 8px"
-              >清空表单</el-button
-            >
+              style="margin-left: 8px">清空表单</el-button>
           </div>
         </div>
       </div>
-      <el-dialog
-        :visible.sync="showModal"
+      <el-dialog :visible.sync="showModal"
         :title="'配置' + modalFormData.modalTitle + '属性'"
         :mask-closable="false"
-        id="lg_modal"
-      >
-        <el-form
-          class="form_content"
+        id="lg_modal">
+        <el-form class="form_content"
           :label-width="'130px'"
           :model="modalFormData"
-          ref="modalFormData"
-        >
-          <el-form-item label="控件名称：" v-if="showLabel">
-            <el-input
-              v-model="modalFormData.label"
+          ref="modalFormData">
+          <el-form-item label="控件名称："
+            v-if="showLabel">
+            <el-input v-model="modalFormData.label"
               placeholder="请输入控件名称"
               :maxlength="20"
-              style="width: 200px"
-            ></el-input>
+              style="width: 200px"></el-input>
           </el-form-item>
-          <el-form-item
-            label="使用接口路径："
+          <el-form-item label="使用接口路径："
             v-if="
               modalFormData.type === 'radio' ||
               modalFormData.type === 'checkbox' ||
               modalFormData.items
-            "
-          >
-            <el-radio-group
-              id="lg_group"
+            ">
+            <el-radio-group id="lg_group"
               v-model="modalFormData.useDictionary"
-              style="margin-top: 7px"
-            >
+              style="margin-top: 7px">
               <el-radio :label="1">是</el-radio>
               <el-radio :label="0">否</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item
-            label="接口地址："
-            v-if="modalFormData.useDictionary === 1"
-          >
-            <el-input
-              v-model="modalFormData.urlData"
+          <el-form-item label="接口地址："
+            v-if="modalFormData.useDictionary === 1">
+            <el-input v-model="modalFormData.urlData"
               placeholder="请输入接口地址"
-              style="width: 200px"
-            ></el-input>
-            <el-button
-              type="primary"
+              style="width: 200px"></el-input>
+            <el-button type="primary"
               @click="handleDataDictChange"
-              v-loading="testLoading"
-              >测试</el-button
-            ><br />
+              v-loading="testLoading">测试</el-button><br />
             <span :class="resultStatus ? 'lg_green' : 'lg_red'">{{
               testResult
             }}</span>
@@ -179,206 +155,167 @@
                 id: item.id, parent_name: item.parent_name, label: item.label})" :key="item.id">{{ item.label }}</el-option>
             </el-select> -->
           </el-form-item>
-          <el-form-item label="name属性：" v-if="showName">
-            <el-input
-              v-model="modalFormData.name"
+          <el-form-item label="name属性："
+            v-if="showName">
+            <el-input v-model="modalFormData.name"
               placeholder=""
-              style="width: 200px"
-            ></el-input>
+              style="width: 200px"></el-input>
           </el-form-item>
 
-          <el-form-item
-            v-if="
+          <el-form-item v-if="
               modalFormData.useDictionary === 0
                 ? modalFormData.type === 'radio' ||
                   modalFormData.type === 'checkbox' ||
                   modalFormData.items
                 : false
-            "
-          >
-            <div
-              id="itemList"
+            ">
+            <div id="itemList"
               v-for="(domain, index) in modalFormData.items"
-              :key="domain.label_value"
-            >
+              :key="domain.label_value">
               <span class="itemName">选项{{ index }}：</span>
-              <el-input
-                v-model="domain.label_name"
-                style="width: 200px; margin-right: 5px"
-              ></el-input>
+              <el-input v-model="domain.label_name"
+                style="width: 200px; margin-right: 5px"></el-input>
               <el-button @click.prevent="removeDomain(domain)">删除</el-button>
             </div>
           </el-form-item>
-          <el-form-item
-            v-if="
+          <el-form-item v-if="
               modalFormData.useDictionary === 0
                 ? modalFormData.type === 'radio' ||
                   modalFormData.type === 'checkbox' ||
                   modalFormData.items
                 : false
-            "
-          >
+            ">
             <el-button @click="addDomain">新增选项</el-button>
           </el-form-item>
 
-          <el-form-item label="关联数据：" v-if="showRelation">
+          <el-form-item label="关联数据："
+            v-if="showRelation">
             <!-- 当绑定name并且当前relationList存在数据时候才可以关联字段 -->
-            <el-checkbox
-              :disabled="!modalFormData.name || !relationList.length"
-              v-model="modalFormData.relation"
-              >是否关联字段</el-checkbox
-            >
+            <el-checkbox :disabled="!modalFormData.name || !relationList.length"
+              v-model="modalFormData.relation">是否关联字段</el-checkbox>
           </el-form-item>
-          <el-form-item
-            label="关联配置："
+          <el-form-item label="关联配置："
             v-if="
               typeof modalFormData.relation != 'undefined' &&
               modalFormData.relation
-            "
-          >
-            <el-select
-              v-model="modalFormData.relation_name"
+            ">
+            <el-select v-model="modalFormData.relation_name"
               class="inline-block"
               style="width: 150px"
-              @on-change="(_) => (modalFormData.relation_value = '')"
-            >
-              <el-option
-                :disabled="item.obj.name == modalFormData.name"
+              @on-change="(_) => (modalFormData.relation_value = '')">
+              <el-option :disabled="item.obj.name == modalFormData.name"
                 v-for="(item, index) in relationList"
                 :key="index"
-                :value="item.obj.name"
-                >{{ item.obj.label }}</el-option
-              >
+                :value="item.obj.name">{{ item.obj.label }}</el-option>
             </el-select>
             <p class="inline-block padder-sm">等于</p>
-            <el-select
-              v-model="modalFormData.relation_value"
+            <el-select v-model="modalFormData.relation_value"
               class="inline-block"
-              style="width: 150px"
-            >
-              <el-option
-                v-for="(item, index) in relationValue"
+              style="width: 150px">
+              <el-option v-for="(item, index) in relationValue"
                 :key="index"
-                :value="item.label_value"
-                >{{ item.label_name }}</el-option
-              >
+                :value="item.label_value">{{ item.label_name }}</el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="placeholder：" v-if="showPlaceholder">
-            <el-input
-              v-model="modalFormData.placeholder"
+          <el-form-item label="placeholder："
+            v-if="showPlaceholder">
+            <el-input v-model="modalFormData.placeholder"
               placeholder="请输入placeholder"
-              style="width: 200px"
-            ></el-input>
+              style="width: 200px"></el-input>
           </el-form-item>
-          <el-form-item label="最大长度：" v-if="showMaxLength">
-            <el-input-number
-              v-model="modalFormData.maxLength"
-              placeholder="请输入文本限制最大长度"
-            >
+          <el-form-item label="最大长度："
+            v-if="showMaxLength">
+            <el-input-number v-model="modalFormData.maxLength"
+              placeholder="请输入文本限制最大长度">
             </el-input-number>
           </el-form-item>
-          <el-form-item label="最大限制：" v-if="showMaxSize">
-            <el-input-number
-              :formatter="(value) => `${value}kb`"
+          <el-form-item label="最大限制："
+            v-if="showMaxSize">
+            <el-input-number :formatter="(value) => `${value}kb`"
               :parser="(value) => value.replace('kb', '')"
               v-model="modalFormData.maxSize"
-              placeholder="请输入上传文件最大限制"
-            >
+              placeholder="请输入上传文件最大限制">
             </el-input-number>
           </el-form-item>
-          <el-form-item label="上边距：" v-if="showMarginTop">
-            <el-input-number
-              :formatter="(value) => `${value}px`"
+          <el-form-item label="上边距："
+            v-if="showMarginTop">
+            <el-input-number :formatter="(value) => `${value}px`"
               :parser="(value) => value.replace('px', '')"
               v-model="modalFormData.marginTop"
-              placeholder="请输入标签上边距"
-            >
+              placeholder="请输入标签上边距">
             </el-input-number>
           </el-form-item>
-          <el-form-item label="下边距：" v-if="showMarginBottom">
-            <el-input-number
-              :formatter="(value) => `${value}px`"
+          <el-form-item label="下边距："
+            v-if="showMarginBottom">
+            <el-input-number :formatter="(value) => `${value}px`"
               :parser="(value) => value.replace('px', '')"
               v-model="modalFormData.marginBottom"
-              placeholder="请输入标签下边距"
-            >
+              placeholder="请输入标签下边距">
             </el-input-number>
           </el-form-item>
-          <el-form-item label="详细地址：" v-if="showDetails_address">
-            <el-checkbox v-model="modalFormData.details_address"
-              >是否需要详细地址</el-checkbox
-            >
+          <el-form-item label="详细地址："
+            v-if="showDetails_address">
+            <el-checkbox v-model="modalFormData.details_address">是否需要详细地址</el-checkbox>
           </el-form-item>
-          <el-form-item label="是否必填：" v-if="showRequire">
+          <el-form-item label="是否必填："
+            v-if="showRequire">
             <el-checkbox v-model="modalFormData.require">必填</el-checkbox>
           </el-form-item>
-          <el-form-item label="校验错误：" v-if="showRuleError">
-            <el-input
-              v-model="modalFormData.ruleError"
+          <el-form-item label="校验错误："
+            v-if="showRuleError">
+            <el-input v-model="modalFormData.ruleError"
               placeholder="请输入校验错误提示"
-              style="width: 200px"
-            ></el-input>
+              style="width: 200px"></el-input>
           </el-form-item>
-          <el-form-item
-            label="是否多选："
+          <el-form-item label="是否多选："
             v-if="
               typeof modalFormData.multiple != 'undefined' &&
               modalFormData.type != 'address'
-            "
-          >
+            ">
             <el-checkbox v-model="modalFormData.multiple">多选</el-checkbox>
           </el-form-item>
-          <el-form-item label="时间格式：" v-if="showFormat">
-            <el-radio-group id="lg_group" v-model="modalFormData.format">
+          <el-form-item label="时间格式："
+            v-if="showFormat">
+            <el-radio-group id="lg_group"
+              v-model="modalFormData.format">
               <el-radio label="yyyy年MM月dd日"></el-radio>
               <el-radio label="yyyy-MM-dd HH:mm"></el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="行内元素：" v-if="showInlineBlock">
+          <el-form-item label="行内元素："
+            v-if="showInlineBlock">
             <el-checkbox v-model="modalFormData.inlineBlock">是</el-checkbox>
           </el-form-item>
-          <el-form-item label="显示行数：" v-if="showMaxRows">
-            <el-slider
-              v-model="modalFormData.maxRows"
+          <el-form-item label="显示行数："
+            v-if="showMaxRows">
+            <el-slider v-model="modalFormData.maxRows"
               :min="2"
-              :max="10"
-            ></el-slider>
+              :max="10"></el-slider>
           </el-form-item>
-          <el-form-item
-            label="标题大小："
-            v-if="typeof modalFormData.level != 'undefined'"
-          >
-            <el-input-number
-              :max="6"
+          <el-form-item label="标题大小："
+            v-if="showLevel">
+            <el-input-number :max="6"
               :min="1"
-              v-model="modalFormData.level"
-            ></el-input-number>
+              v-model="modalFormData.level"></el-input-number>
           </el-form-item>
-          <el-form-item
-            label="字体颜色："
-            v-if="typeof modalFormData.color != 'undefined'"
-          >
+          <el-form-item label="字体颜色："
+            v-if="showColor">
             <el-color-picker v-model="modalFormData.color" />
           </el-form-item>
         </el-form>
         <div slot="footer">
-          <el-button type="text" @click="handleCancel">取消</el-button>
-          <el-button
-            type="primary"
+          <el-button type="text"
+            @click="handleCancel">取消</el-button>
+          <el-button type="primary"
             :loading="modalFormData.loading"
-            @click="handleOk"
-            >确定</el-button
-          >
+            @click="handleOk">确定</el-button>
         </div>
       </el-dialog>
       <!-- 预览 -->
       <el-dialog :visible.sync="renderShow">
         <div>
-          <render
-            :template_form="template_form"
-            @closeRenderShow="closeRenderShow"
-          ></render>
+          <render :template_form="template_form"
+            @closeRenderShow="closeRenderShow"></render>
         </div>
       </el-dialog>
     </div>
@@ -459,9 +396,9 @@ export default {
         })
       );
       if (
-        !this.addForm.functionType ||
-        !this.addForm.name ||
-        !this.addForm.type
+        // !this.addForm.functionType ||
+        !this.addForm.name // ||
+        // !this.addForm.type
       ) {
         this.$message({
           showClose: true,
@@ -665,6 +602,12 @@ export default {
     },
     showMaxRows() {
       return typeof this.modalFormData.maxRows !== "undefined";
+    },
+    showLevel() {
+      return typeof this.modalFormData.level !== "undefined";
+    },
+    showColor() {
+      return typeof this.modalFormData.color !== "undefined";
     },
     // 数据字典已选择项
     dataDictSelected() {

@@ -1,3 +1,12 @@
+/*
+ * @Author: laibin.zheng
+ * @Date: 2021-10-19 09:41:33
+ * @LastEditTime: 2021-10-19 12:35:00
+ * @LastEditors: laibin.zheng
+ * @Description: 
+ * @FilePath: \form-creater\src\formCreater\components\custom_form\control\Radio.js
+ * 
+ */
 export default (_self, h) => {
   return [
     h('el-radio-group', {
@@ -6,6 +15,7 @@ export default (_self, h) => {
       },
       on: {
         'change': function(value) {
+          console.log(value);
         }
       }
     }, _self.obj.items.map(v => {
@@ -16,6 +26,7 @@ export default (_self, h) => {
         },
         on: {
           change: function(value) {
+            console.log(value);
             if (!_self.obj.name) {
               return false
             }

@@ -1,3 +1,12 @@
+/*
+ * @Author: laibin.zheng
+ * @Date: 2021-10-19 09:41:33
+ * @LastEditTime: 2021-10-19 12:35:52
+ * @LastEditors: laibin.zheng
+ * @Description: 
+ * @FilePath: \form-creater\src\formCreater\components\custom_form\control\CheckBox.js
+ * 
+ */
 export default (_self, h) => {
   return [
     h('el-checkbox-group', {
@@ -6,6 +15,7 @@ export default (_self, h) => {
       },
       on: {
         'change': function(arr) {
+          console.log(arr);
         }
       }
     }, _self.obj.items.map(v => {
@@ -15,6 +25,7 @@ export default (_self, h) => {
         },
         on: {
           change: function(arr) {
+            console.log(arr);
             if (!_self.obj.name) {
               return false
             }
